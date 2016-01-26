@@ -7,9 +7,12 @@ import {mapUrl} from 'utils/url.js';
 import PrettyError from 'pretty-error';
 import http from 'http';
 import SocketIo from 'socket.io';
+import routes from 'routes';
 
 const pretty = new PrettyError();
 const app = express();
+
+app.use('/', routes);
 
 const server = new http.Server(app);
 
