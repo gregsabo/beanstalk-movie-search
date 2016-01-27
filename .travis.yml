@@ -1,15 +1,18 @@
 language: node_js
-
 node_js:
-  - "4"
-
+- '4'
 sudo: false
-
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 script:
-  - npm run lint
-  - npm test
-  - npm run test-node
+- npm run lint
+- npm test
+- npm run test-node
+deploy:
+  provider: heroku
+  api_key:
+    secure: rj55lDARqxVVF28+Y5envdBClGgvtbkS8VQygzPULU4oG0gCTOz1Q/PaBqfjFnKVohtcWAhSgOcCdEJD/bdd+x+nBji6V4bFC6TyFw7mSv3EZB1BIxRTCGgGTRbmOB8/qNKpxpaVI4yo9QdlCZslxnWy3AfWx1veFua1oLZDBLn2UkmyvMRma/x2gfwUuwCW5Cxm0RFpS5e15OkpaKtGSMdX01GhCxzTO+xnpqSa8DgKs11+/79eqz7JyTH3TAAKBRRUY1BzPSoEHFfJEKfQiH/qL33LnFI+SJPvABJkLOKiV7TwTBzoPuwaxsB37s6o224d5pvjvcrXcg2SYDuMza7pTnLwmi5nU5lvrMhWC7WO4aI9+hFwDLk3Rf1GsSlb3NJFhisWtxafaiCRU2B6mki1KSWpE+UHAfFF5eMWm4epYX+JGbzcMqU/RLCpJe6+w2yFcGzcPLHK9l/yCCeuydKcpWVxI3E4hLZC56XiB/X5/9US4WWsZRUSfjL3zJwKDTvI5ceOpKQ1CiNBk+fJcSVb2+DQYch8LxCwDmEhb1yAD6ADnknxx4bxQ1QL5hlMNdh7OZPmP53YK26+osT1yddJB6cM1Ero3fdo04zgxgs+/OGyY3bTLVVJtU2qZXpDF5y9komxzIW7I6DkltoQrA4zhKdTZczoqTgeOimLfjM=
+  app: beanstalk-movie-search
+  on:
+    repo: gregsabo/beanstalk-movie-search
