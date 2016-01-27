@@ -10,7 +10,8 @@ import { pushState } from 'redux-router';
 })
 export default class Home extends Component {
   static propTypes = {
-    fields: PropTypes.object
+    fields: PropTypes.object,
+    dispatch: PropTypes.func
   };
 
   render() {
@@ -23,7 +24,7 @@ export default class Home extends Component {
         <form onSubmit={event => {
           event.preventDefault();
           const query = queryField.value;
-          this.dispatch(pushState(null, '/search', {q: query}));
+          this.props.dispatch(pushState(null, '/search', {q: query}));
         }}>
           <Input type="text" label="Enter your query:" {...queryField} />
           <ButtonInput type="submit" bsStyle="primary" />
