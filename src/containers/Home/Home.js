@@ -1,34 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import { Input, ButtonInput } from 'react-bootstrap';
 import { reduxForm } from 'redux-form';
 import { pushState } from 'redux-router';
+import { QueryInput } from 'components';
 
 @reduxForm({
   form: 'search',
   fields: ['query']
-})
+}, () => {}, {pushState})
 export default class Home extends Component {
   static propTypes = {
     fields: PropTypes.object,
-    dispatch: PropTypes.func
+    dispatch: PropTypes.func,
+    pushState: PropTypes.func
   };
 
   render() {
-    const queryField = this.props.fields.query;
-
     return (
       <div>
         <Helmet title="Home"/>
         <h1>Welcome to movie search.</h1>
-        <form onSubmit={event => {
-          event.preventDefault();
-          const query = queryField.value;
-          this.props.dispatch(pushState(null, '/search', {q: query}));
-        }}>
-          <Input type="text" label="Enter your query:" {...queryField} />
-          <ButtonInput type="submit" bsStyle="primary" />
-        </form>
+        <QueryInput queryField={this.props.fields.query} onSubmit={query => {
+          this.props.pushState(null, '/search', {q: query});
+        }} />
       </div>
     );
   }

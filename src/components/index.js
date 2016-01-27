@@ -5,3 +5,5 @@
  *
  */
 
+
+export QueryInput from './QueryInput/QueryInput';
