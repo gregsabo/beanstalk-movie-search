@@ -13,7 +13,9 @@ export default function reducer(stateObj = initialState, action = {}) {
   const state = fromJS(stateObj);
   switch (action.type) {
     case PERFORM_SEARCH.BEGIN:
-      return state.set('movies', null);
+      return state
+        .set('movies', null)
+        .set('query', action.payload.query);
     case PERFORM_SEARCH.SUCCESS:
       const movies = fromJS(action.result.movies);
       return state.set('movies', movies);
@@ -29,7 +31,8 @@ export function currentQuery(state: Object) {
 export function performSearch(query: string) {
   return {
     types: PERFORM_SEARCH.trio,
-    promise: client => client.get('/search', {params: {q: query}})
+    promise: client => client.get('/search', {params: {q: query}}),
+    payload: {query}
   };
 }
 
