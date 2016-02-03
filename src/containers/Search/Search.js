@@ -4,7 +4,8 @@ import * as searchActions from 'redux/modules/search';
 import { QueryInput } from 'components';
 import { pushState } from 'redux-router';
 import { reduxForm } from 'redux-form';
-import { Link } from 'react-router';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 function fetchDataDeferred(getState, dispatch) {
   const query = getState().router.location.query.q;
@@ -15,11 +16,13 @@ function fetchDataDeferred(getState, dispatch) {
 
 function renderMovie(inMovie) {
   const id = inMovie.get('id');
-  return (<div key={id}>
-    <Link to={`/movies/${id}`}>
-      {inMovie.get('title')}
-    </Link>
-  </div>);
+  return (
+    <LinkContainer to={`/movies/${id}`}>
+      <ListGroupItem key={id}>
+        {inMovie.get('title')}
+      </ListGroupItem>
+    </LinkContainer>
+  );
 }
 
 @connectData(null, fetchDataDeferred)
@@ -51,7 +54,9 @@ export default class Search extends Component {
         <QueryInput queryField={queryField} onSubmit={newQuery => {
           this.props.pushState(null, '/search', {q: newQuery});
         }} />
-        {movies.map(renderMovie)}
+        <ListGroup>
+          {movies.map(renderMovie)}
+        </ListGroup>
       </div>
     );
   }
