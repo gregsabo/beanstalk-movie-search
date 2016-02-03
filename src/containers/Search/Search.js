@@ -18,8 +18,8 @@ function renderMovie(inMovie) {
   const id = inMovie.get('id');
   return (
     <LinkContainer to={`/movies/${id}`}>
-      <ListGroupItem key={id}>
-        {inMovie.get('title')}
+      <ListGroupItem key={id} header={inMovie.get('title')}>
+        {inMovie.get('year')}
       </ListGroupItem>
     </LinkContainer>
   );
