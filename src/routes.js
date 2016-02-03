@@ -8,6 +8,7 @@ import {
     LoginSuccess,
     NotFound,
     Search,
+    Movie,
   } from 'containers';
 
 export default (store) => {
@@ -44,6 +45,7 @@ export default (store) => {
       { /* Routes */ }
       <Route path="login" component={Login}/>
       <Route path="search" component={Search}/>
+      <Route path="movies/:id" component={Movie}/>
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />

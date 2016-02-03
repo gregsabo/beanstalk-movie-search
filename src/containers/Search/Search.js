@@ -4,6 +4,7 @@ import * as searchActions from 'redux/modules/search';
 import { QueryInput } from 'components';
 import { pushState } from 'redux-router';
 import { reduxForm } from 'redux-form';
+import { Link } from 'react-router';
 
 function fetchDataDeferred(getState, dispatch) {
   const query = getState().router.location.query.q;
@@ -13,8 +14,11 @@ function fetchDataDeferred(getState, dispatch) {
 }
 
 function renderMovie(inMovie) {
-  return (<div key={inMovie.get('id')}>
-    {inMovie.get('title')}
+  const id = inMovie.get('id');
+  return (<div key={id}>
+    <Link to={`/movies/${id}`}>
+      {inMovie.get('title')}
+    </Link>
   </div>);
 }
 
