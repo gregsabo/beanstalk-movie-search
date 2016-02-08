@@ -68,6 +68,11 @@ export default class Search extends Component {
         </ListGroup>
         <Pagination
           bsSize="large"
+          maxButtons={5}
+          prev="Previous"
+          next="Next"
+          first="First"
+          last="Last"
           items={totalPages}
           activePage={page}
           onSelect={(event, selectedEvent) => {
