@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import connectData from 'helpers/connectData';
 import * as movieDuck from 'redux/modules/movie';
 import { connect } from 'react-redux';
+import Loader from 'react-loader';
 
 function fetchDataDeferred(getState, dispatch, location, {id}) {
   if (!movieDuck.isLoaded(getState().movie, id)) {
@@ -21,7 +22,14 @@ export default class Movie extends Component {
   render() {
     const movie = this.props.movieIndex.get(this.props.routeParams.id);
     if (!movie) {
-      return <div>Loading...</div>;
+      return (<Loader
+        color="#2C3E50"
+        speed={2}
+        radius={15}
+        length={20}
+        top="100px"
+        hwaccel
+      />);
     }
     return (<div>
       <h2>{movie.get('title')}</h2>

@@ -6,6 +6,7 @@ import { pushState } from 'redux-router';
 import { reduxForm } from 'redux-form';
 import { ListGroup, ListGroupItem, Pagination } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import Loader from 'react-loader';
 
 function fetchDataDeferred(getState, dispatch) {
   const routerQuery = getState().router.location.query;
@@ -48,39 +49,46 @@ export default class Search extends Component {
     const queryField = this.props.fields.query;
     const searchState = this.props.searchState;
 
-    const movies = searchState.get('movies');
+    const movies = searchState.get('movies') || [];
     const page = Number(searchState.get('page') || 1);
     const query = searchState.get('query');
     const totalPages = searchActions.totalPages(searchState);
-    if (!searchActions.isLoaded(searchState, query, page)) {
-      return (
-        <div>Loading...</div>
-      );
-    }
-    console.log('seems loaded.', searchState);
     return (
       <div>
         <QueryInput queryField={queryField} onSubmit={newQuery => {
           this.props.pushState(null, '/search', {q: newQuery});
         }} />
-        <ListGroup>
-          {movies.map(renderMovie)}
-        </ListGroup>
-        <Pagination
-          bsSize="large"
-          maxButtons={5}
-          prev="Previous"
-          next="Next"
-          first="First"
-          last="Last"
-          items={totalPages}
-          activePage={page}
-          onSelect={(event, selectedEvent) => {
-            this.props.pushState(null, '/search', {
-              q: query,
-              page: selectedEvent.eventKey
-            });
-          }} />
+        <div style={{position: 'relative'}}>
+          <Loader
+            loaded={searchActions.isLoaded(searchState, query, page)}
+            color="#2C3E50"
+            speed={2}
+            radius={15}
+            length={20}
+            top="100px"
+            hwaccel
+          >
+            <ListGroup>
+              {movies.map(renderMovie)}
+            </ListGroup>
+            <Pagination
+              bsSize="large"
+              maxButtons={5}
+              prev="Previous"
+              next="Next"
+              first="First"
+              last="Last"
+              ellipsis
+              items={totalPages}
+              activePage={page}
+              onSelect={(event, selectedEvent) => {
+                this.props.pushState(null, '/search', {
+                  q: query,
+                  page: selectedEvent.eventKey
+                });
+              }} />
+          </Loader>
+        </div>
       </div>
     );
   }
