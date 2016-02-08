@@ -4,13 +4,14 @@ import * as searchActions from 'redux/modules/search';
 import { QueryInput } from 'components';
 import { pushState } from 'redux-router';
 import { reduxForm } from 'redux-form';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, Pagination } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 function fetchDataDeferred(getState, dispatch) {
-  const query = getState().router.location.query.q;
-  const page = Number(getState().router.location.query.page || 1);
-  if (searchActions.currentQuery(getState().search) !== query) {
+  const routerQuery = getState().router.location.query;
+  const query = routerQuery.q;
+  const page = Number(routerQuery.page || 1);
+  if (!searchActions.isLoaded(getState().search, query, page)) {
     return dispatch(searchActions.performSearch(query, page));
   }
 }
@@ -40,17 +41,23 @@ export default class Search extends Component {
     fields: PropTypes.object,
     pushState: PropTypes.func,
     initialValues: PropTypes.object,
-    pageNum: PropTypes.number
+    pageNum: PropTypes.number,
   };
 
   render() {
     const queryField = this.props.fields.query;
-    const movies = this.props.searchState.get('movies');
-    if (!searchActions.isLoaded(this.props.searchState)) {
+    const searchState = this.props.searchState;
+
+    const movies = searchState.get('movies');
+    const page = Number(searchState.get('page') || 1);
+    const query = searchState.get('query');
+    const totalPages = searchActions.totalPages(searchState);
+    if (!searchActions.isLoaded(searchState, query, page)) {
       return (
         <div>Loading...</div>
       );
     }
+    console.log('seems loaded.', searchState);
     return (
       <div>
         <QueryInput queryField={queryField} onSubmit={newQuery => {
@@ -59,6 +66,16 @@ export default class Search extends Component {
         <ListGroup>
           {movies.map(renderMovie)}
         </ListGroup>
+        <Pagination
+          bsSize="large"
+          items={totalPages}
+          activePage={page}
+          onSelect={(event, selectedEvent) => {
+            this.props.pushState(null, '/search', {
+              q: query,
+              page: selectedEvent.eventKey
+            });
+          }} />
       </div>
     );
   }
