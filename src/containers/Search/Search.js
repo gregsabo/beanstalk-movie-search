@@ -9,16 +9,17 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 function fetchDataDeferred(getState, dispatch) {
   const query = getState().router.location.query.q;
+  const page = Number(getState().router.location.query.page || 1);
   if (searchActions.currentQuery(getState().search) !== query) {
-    return dispatch(searchActions.performSearch(query));
+    return dispatch(searchActions.performSearch(query, page));
   }
 }
 
 function renderMovie(inMovie) {
   const id = inMovie.get('id');
   return (
-    <LinkContainer to={`/movies/${id}`}>
-      <ListGroupItem key={id} header={inMovie.get('title')}>
+    <LinkContainer key={id} to={`/movies/${id}`}>
+      <ListGroupItem header={inMovie.get('title')}>
         {inMovie.get('year')}
       </ListGroupItem>
     </LinkContainer>
@@ -31,7 +32,7 @@ function renderMovie(inMovie) {
   fields: ['query'],
 }, state => ({
   searchState: state.search,
-  initialValues: {query: state.search.get('query')}
+  initialValues: {query: state.search.get('query')},
 }), {pushState})
 export default class Search extends Component {
   static propTypes = {
@@ -39,6 +40,7 @@ export default class Search extends Component {
     fields: PropTypes.object,
     pushState: PropTypes.func,
     initialValues: PropTypes.object,
+    pageNum: PropTypes.number
   };
 
   render() {
