@@ -3,6 +3,8 @@ import connectData from 'helpers/connectData';
 import * as movieDuck from 'redux/modules/movie';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
+import { Link } from 'react-router';
+import { Glyphicon } from 'react-bootstrap';
 
 function fetchDataDeferred(getState, dispatch, location, {id}) {
   if (!movieDuck.isLoaded(getState().movie, id)) {
@@ -10,16 +12,31 @@ function fetchDataDeferred(getState, dispatch, location, {id}) {
   }
 }
 
+function renderSearchLink(searchState) {
+  if (!searchState.get('query')) {
+    return undefined;
+  }
+  return (<div>
+    <Link to={`/search?q=${searchState.get('query')}&page=${searchState.get('page')}`}>
+      <Glyphicon glyph="chevron-left" />
+      Back to search
+    </Link>
+  </div>);
+}
+
 @connectData(null, fetchDataDeferred)
 @connect(state => ({
-  movieIndex: state.movie
+  movieIndex: state.movie,
+  searchState: state.search
 }))
 export default class Movie extends Component {
   static propTypes = {
     routeParams: PropTypes.object,
     movieIndex: PropTypes.object,
+    searchState: PropTypes.object,
   }
   render() {
+    console.log('search state is', this.props.searchState);
     const movie = this.props.movieIndex.get(this.props.routeParams.id);
     if (!movie) {
       return (<Loader
@@ -32,6 +49,7 @@ export default class Movie extends Component {
       />);
     }
     return (<div>
+      {renderSearchLink(this.props.searchState)}
       <h2>{movie.get('title')}</h2>
       <div>
         <img src={movie.get('posters').get('detailed')} />

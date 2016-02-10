@@ -10,7 +10,7 @@ import Loader from 'react-loader';
 
 function fetchDataDeferred(getState, dispatch) {
   const routerQuery = getState().router.location.query;
-  const query = routerQuery.q;
+  const query = routerQuery.q || '';
   const page = Number(routerQuery.page || 1);
   if (!searchActions.isLoaded(getState().search, query, page)) {
     return dispatch(searchActions.performSearch(query, page));
