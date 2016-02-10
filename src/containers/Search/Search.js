@@ -72,12 +72,11 @@ export default class Search extends Component {
               {movies.map(renderMovie)}
             </ListGroup>
             <Pagination
-              bsSize="large"
-              maxButtons={5}
-              prev="Previous"
-              next="Next"
-              first="First"
-              last="Last"
+              maxButtons={3}
+              prev
+              next
+              first
+              last
               ellipsis
               items={totalPages}
               activePage={page}
