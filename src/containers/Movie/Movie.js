@@ -4,7 +4,7 @@ import * as movieDuck from 'redux/modules/movie';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import { Link } from 'react-router';
-import { Glyphicon, Panel, PageHeader, Jumbotron } from 'react-bootstrap';
+import { Glyphicon, Panel, PageHeader, Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 
 function fetchDataDeferred(getState, dispatch, location, {id}) {
   if (!movieDuck.isLoaded(getState().movie, id)) {
@@ -45,7 +45,6 @@ export default class Movie extends Component {
     searchState: PropTypes.object,
   }
   render() {
-    console.log('search state is', this.props.searchState);
     const movie = this.props.movieIndex.get(this.props.routeParams.id);
     if (!movie) {
       return (<Loader
@@ -57,17 +56,35 @@ export default class Movie extends Component {
         hwaccel
       />);
     }
+    let director = null;
+    if (movie.get('abridged_directors')) {
+      director = movie.get('abridged_directors').first().get('name');
+    }
     return (<div>
-      {renderSearchLink(this.props.searchState)}
-      <PageHeader>{movie.get('title')} <small>{movie.get('year')}</small></PageHeader>
-      <Jumbotron>
-        <img src={movie.get('posters').get('detailed')} />
-      </Jumbotron>
-      {maybeRenderPanel('MPAA Rating', movie.get('mpaa_rating'))}
-      {maybeRenderPanel('Director', movie.get('abridged_directors').first().get('name'))}
-      {maybeRenderPanel('Critic rating', movie.get('ratings').get('critics_score'))}
-      {maybeRenderPanel('Audience rating', movie.get('ratings').get('audience_score'))}
-      {maybeRenderPanel('Synopsis', movie.get('synopsis'))}
+      <Grid>
+        {renderSearchLink(this.props.searchState)}
+        <PageHeader>{movie.get('title')} <small>{movie.get('year')}</small></PageHeader>
+        <Jumbotron>
+          <img src={movie.get('posters').get('detailed')} />
+        </Jumbotron>
+        <Row>
+          <Col md={6}>
+            {maybeRenderPanel('MPAA Rating', movie.get('mpaa_rating'))}
+          </Col>
+          <Col md={6}>
+            {maybeRenderPanel('Director', director)}
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            {maybeRenderPanel('Critic rating', movie.get('ratings').get('critics_score'))}
+          </Col>
+          <Col md={6}>
+            {maybeRenderPanel('Audience rating', movie.get('ratings').get('audience_score'))}
+          </Col>
+        </Row>
+        {maybeRenderPanel('Synopsis', movie.get('synopsis'))}
+      </Grid>
     </div>);
   }
 }
