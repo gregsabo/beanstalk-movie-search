@@ -4,7 +4,7 @@ import * as movieDuck from 'redux/modules/movie';
 import { connect } from 'react-redux';
 import Loader from 'react-loader';
 import { Link } from 'react-router';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, Panel, PageHeader, Jumbotron } from 'react-bootstrap';
 
 function fetchDataDeferred(getState, dispatch, location, {id}) {
   if (!movieDuck.isLoaded(getState().movie, id)) {
@@ -22,6 +22,15 @@ function renderSearchLink(searchState) {
       Back to search
     </Link>
   </div>);
+}
+
+function maybeRenderPanel(title, value) {
+  if (!value) {
+    return undefined;
+  }
+  return (<Panel header={title}>
+    {value}
+  </Panel>);
 }
 
 @connectData(null, fetchDataDeferred)
@@ -50,15 +59,15 @@ export default class Movie extends Component {
     }
     return (<div>
       {renderSearchLink(this.props.searchState)}
-      <h2>{movie.get('title')}</h2>
-      <div>
+      <PageHeader>{movie.get('title')} <small>{movie.get('year')}</small></PageHeader>
+      <Jumbotron>
         <img src={movie.get('posters').get('detailed')} />
-      </div>
-      <h3>{movie.get('year')} {movie.get('mpaa_rating')}</h3>
-      <p>Directed by: {movie.get('abridged_directors').first()}</p>
-      <p>Critic rating: {movie.get('ratings').get('critics_score')}</p>
-      <p>Audience rating: {movie.get('ratings').get('audience_score')}</p>
-      <p>{movie.get('synopsis')}</p>
+      </Jumbotron>
+      {maybeRenderPanel('MPAA Rating', movie.get('mpaa_rating'))}
+      {maybeRenderPanel('Director', movie.get('abridged_directors').first().get('name'))}
+      {maybeRenderPanel('Critic rating', movie.get('ratings').get('critics_score'))}
+      {maybeRenderPanel('Audience rating', movie.get('ratings').get('audience_score'))}
+      {maybeRenderPanel('Synopsis', movie.get('synopsis'))}
     </div>);
   }
 }
