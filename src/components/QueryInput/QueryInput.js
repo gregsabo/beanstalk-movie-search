@@ -15,8 +15,7 @@ export default class Home extends Component {
       event.preventDefault();
       this.props.onSubmit(queryField.value);
     }}>
-      <Input autoComplete="off" type="text" label="Enter your query:" {...queryField} />
-      <ButtonInput type="submit" bsStyle="primary" />
+      <Input autoComplete="off" type="text" label="Search for a movie:" {...queryField} buttonAfter={<ButtonInput type="submit" bsStyle="primary" />}/>
     </form>
     );
   }
